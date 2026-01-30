@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DP Maker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#0f172a;
+  font-family:Arial,sans-serif;
+  color:#fff;
+}
+.container{
+  background:#020617;
+  padding:20px;
+  border-radius:16px;
+  width:100%;
+  max-width:360px;
+  text-align:center;
+}
+canvas{
+  display:block;
+  margin:15px auto;
+  background:#fff;
+  border-radius:50%;
+}
+button{
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:#fff;
+  font-size:14px;
+}
+input{width:100%;margin-top:10px;}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>DP Maker</h2>
+  <input type="file" id="upload" accept="image/*">
+  <canvas id="canvas" width="300" height="300"></canvas>
+  <button id="download">Download DP</button>
+</div>
+
+<script>
+const upload = document.getElementById("upload");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+upload.addEventListener("change", function(){
+  const file = this.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(){
+    const img = new Image();
+    img.onload = function(){
+      ctx.clearRect(0,0,300,300);
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(150,150,150,0,Math.PI*2);
+      ctx.clip();
+      ctx.drawImage(img,0,0,300,300);
+      ctx.restore();
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+document.getElementById("download").onclick = function(){
+  const a = document.createElement("a");
+  a.href = canvas.toDataURL("image/png");
+  a.download = "dp.png";
+  a.click();
+};
+</script>
+
+</body>
+</html>
